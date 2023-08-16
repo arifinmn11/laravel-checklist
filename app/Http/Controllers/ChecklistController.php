@@ -49,14 +49,22 @@ class ChecklistController extends Controller
         );
 
         if ($validator->failed()) {
-            return response()->json($validator->messages());
+            return response()->json(
+                [
+                    "data" => [],
+                    "message" => $validator->messages()
+                ]
+            );
         }
 
         $checklists = Checklist::create([
             'name' => $request['name']
         ]);
 
-        return response()->json($checklists);
+        return response()->json([
+            "data" => $checklists,
+            "message" => ""
+        ],);
     }
 
     public function delete(Request $request, $id)
@@ -65,12 +73,21 @@ class ChecklistController extends Controller
         $checklist = Checklist::find($id);
 
         if (!$checklist) {
-            return response()->json(['data not found!'], 404);
+            return response()->json(
+                [
+                    "data" => [],
+                    "message" => 'data not found!'
+                ],
+                404
+            );
         }
 
         $checklist->delete();
         $checklist->save();
 
-        return response()->json(['success!'], 200);
+        return response()->json([
+            "data" => [],
+            "message" => 'success!'
+        ], 200);
     }
 }

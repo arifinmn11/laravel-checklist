@@ -37,9 +37,9 @@ class AuthController extends Controller
         ]);
 
         if ($user) {
-            return response()->json(['message' => 'Success!']);
+            return response()->json(["data" => [], 'message' => 'Success!']);
         } else {
-            return response()->json(['message' => 'Failed!']);
+            return response()->json(["data" => [], 'message' => 'Failed!'], 404);
         }
     }
 
@@ -49,7 +49,7 @@ class AuthController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(["data" => [], 'message' => 'Unauthorized'], 401);
         }
 
         return $this->respondWithToken($token);
@@ -62,7 +62,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(["data" => auth()->user(), "message" => ""]);
     }
 
     /**
@@ -74,7 +74,7 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(["data" => [], 'message' => 'Successfully logged out']);
     }
 
     /**
@@ -96,10 +96,12 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
-        ]);
+        return response()->json(
+            ["data" => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth()->factory()->getTTL() * 60
+            ], "message" => ""],
+        );
     }
 }

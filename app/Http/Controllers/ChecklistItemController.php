@@ -13,7 +13,7 @@ class ChecklistItemController extends Controller
     {
         $checklistItem = ChecklistItem::where('checklist_id', $id)->get();
 
-        return response()->json([$checklistItem]);
+        return response()->json(["data" => $checklistItem, "message" => ""]);
     }
 
     public function add(Request $request, $id)
@@ -21,7 +21,7 @@ class ChecklistItemController extends Controller
         $checklist = Checklist::find($id);
 
         if (!$checklist) {
-            return response()->json(['data not found!'], 404);
+            return response()->json(["data" => [], "message" => 'data not found!'], 404);
         }
 
         $validator = Validator::make(
@@ -32,7 +32,7 @@ class ChecklistItemController extends Controller
         );
 
         if ($validator->failed()) {
-            return response()->json($validator->messages());
+            return response()->json(["data" => [], "message" => $validator->messages()]);
         }
 
         $checklistItem = ChecklistItem::create([
@@ -41,7 +41,7 @@ class ChecklistItemController extends Controller
 
         ]);
 
-        return response()->json($checklistItem);
+        return response()->json(["data" => [], $checklistItem, "message" => ""]);
     }
 
     public function getAllByCheckIdItemId($checklistId, $checklistItemId)
@@ -49,6 +49,6 @@ class ChecklistItemController extends Controller
 
         $checklistItem = ChecklistItem::where('id', $checklistItemId)->where('checklist_id', $checklistId)->get();
 
-        return response()->json([$checklistItem]);
+        return response()->json(["data" => $checklistItem, "message" => ""]);
     }
 }
