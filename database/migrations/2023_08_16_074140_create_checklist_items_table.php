@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('checklist_items', function (Blueprint $table) {
             $table->id();
+            $table->string('status', 20)->default('checked');
+            $table->string('name', 100);
+            $table->unsignedBigInteger('checklist_id')->nullable(false);
             $table->timestamps();
+            $table->foreign('checklist_id')->on('checklists')->references('id');
         });
     }
 

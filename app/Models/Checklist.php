@@ -12,5 +12,9 @@ class Checklist extends Model
     protected $fillable = [
         'name'
     ];
-    
+
+    public function ChecklistItem()
+    {
+        return $this->hasMany(ChecklistItem::class, 'checklist_id', "id");
+    }
 }
